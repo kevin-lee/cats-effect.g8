@@ -24,7 +24,7 @@ lazy val root = (project in file("."))
     name := props.ProjectName
   )
   .settings(noPublish)
-  .aggregates(core, app)
+  .aggregate(core, app)
 
 lazy val core = subProject("core", file("core"))
   .settings(
