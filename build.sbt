@@ -48,7 +48,7 @@ lazy val noPublish: SettingsDefinition = List(
   publishM2 := {},
   publishLocal := {},
   publishArtifact := false,
-  skip in sbt.Keys.`package` := true,
-  skip in packagedArtifacts := true,
-  skip in publish := true,
+  sbt.Keys.`package` / skip := true,
+  packagedArtifacts / skip := true,
+  publish / skip := true,
 )
