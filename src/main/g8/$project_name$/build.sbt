@@ -100,10 +100,10 @@ def subProject(projectName: String, file: File): Project =
     )
 
 lazy val debianPackageInfo: SettingsDefinition = List(
-  maintainer in Linux := "$author_name$ <$author_email$>",
-  packageSummary in Linux := "My App",
+  Linux / maintainer := "$author_name$ <$author_email$>",
+  Linux / packageSummary := "My App",
   packageDescription := "My app is ...",
-  serverLoading in Debian := SystemV.some,
+  Debian / serverLoading := SystemV.some,
 )
 
 lazy val noPublish: SettingsDefinition = List(
