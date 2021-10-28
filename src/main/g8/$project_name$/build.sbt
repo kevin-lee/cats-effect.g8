@@ -93,7 +93,7 @@ def subProject(projectName: String, file: File): Project =
   Project(projectName, file)
     .settings(
       name := prefixedProjectName(projectName),
-      addCompilerPlugin("org.typelevel" % "kind-projector"     % "0.11.3" cross CrossVersion.full),
+      addCompilerPlugin("org.typelevel" % "kind-projector"     % "0.13.2" cross CrossVersion.full),
       addCompilerPlugin("com.olegpy"   %% "better-monadic-for" % "0.3.1"),
       libraryDependencies ++= libs.hedgehogLibs,
       testFrameworks ~= (testFws => (TestFramework("hedgehog.sbt.Framework") +: testFws).distinct),
