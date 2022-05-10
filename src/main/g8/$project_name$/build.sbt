@@ -1,10 +1,10 @@
 import com.typesafe.sbt.packager.archetypes.systemloader.ServerLoader.SystemV
 
-ThisBuild / scalaVersion := props.ScalaVersion
-ThisBuild / version := props.ProjectVersion
-ThisBuild / organization := props.Org
+ThisBuild / scalaVersion     := props.ScalaVersion
+ThisBuild / version          := props.ProjectVersion
+ThisBuild / organization     := props.Org
 ThisBuild / organizationName := props.OrgName
-ThisBuild / developers := List(
+ThisBuild / developers       := List(
   Developer(
     props.GitHubUsername,
     "$author_name$",
@@ -12,8 +12,8 @@ ThisBuild / developers := List(
     url(s"https://github.com/\${props.GitHubUsername}"),
   )
 )
-ThisBuild / homepage := url(s"https://github.com/\${props.GitHubUsername}/\${props.RepoName}").some
-ThisBuild / scmInfo :=
+ThisBuild / homepage         := url(s"https://github.com/\${props.GitHubUsername}/\${props.RepoName}").some
+ThisBuild / scmInfo          :=
   ScmInfo(
     url(s"https://github.com/\${props.GitHubUsername}/\${props.RepoName}"),
     s"https://github.com/\${props.GitHubUsername}/\${props.RepoName}.git",
@@ -26,12 +26,12 @@ lazy val root = (project in file("."))
   .settings(noPublish)
   .aggregate(core, app)
 
-lazy val core = subProject("core", file("core"))
+lazy val core = subProject("core")
   .settings(
     libraryDependencies ++= List(libs.newtype) ++ libs.refined ++ libs.catsAndCatsEffect
   )
 
-lazy val app = subProject("app", file("app"))
+lazy val app = subProject("app")
   .enablePlugins(JavaAppPackaging)
   .settings(debianPackageInfo)
   .settings(
@@ -48,8 +48,8 @@ lazy val props =
     val OrgName      = "$organizationName$"
 
     val GitHubUsername = "$github_username$"
-    val RepoName       = "$repo_name$"
-    val ProjectName    = "$project_name$"
+    val RepoName       = "$project_name$"
+    val ProjectName    = RepoName
     val ProjectVersion = "0.1.0-SNAPSHOT"
 
     val newtypeVersion = "$newtype_version$"
@@ -86,33 +86,35 @@ lazy val libs =
   }
 
 // format: off
-def prefixedProjectName(name: String) = s"\${props.RepoName}\${if (name.isEmpty) "" else s"-\$name"}"
+def prefixedProjectName(name: String) = s"\${props.ProjectName}\${if (name.isEmpty) "" else s"-\$name"}"
 // format: on
 
-def subProject(projectName: String, file: File): Project =
-  Project(projectName, file)
+def subProject(projectName: String): Project = {
+  val prefixedName = prefixedProjectName(projectName)
+  Project(prefixedName, file(s"modules/\$prefixedName"))
     .settings(
-      name := prefixedProjectName(projectName),
+      name := prefixedName,
       scalacOptions ++= List("-Ymacro-annotations"),
       addCompilerPlugin("org.typelevel" % "kind-projector"     % "0.13.2" cross CrossVersion.full),
       addCompilerPlugin("com.olegpy"   %% "better-monadic-for" % "0.3.1"),
       libraryDependencies ++= libs.hedgehogLibs,
       testFrameworks ~= (testFws => (TestFramework("hedgehog.sbt.Framework") +: testFws).distinct),
     )
+}
 
 lazy val debianPackageInfo: SettingsDefinition = List(
-  Linux / maintainer := "$author_name$ <$author_email$>",
+  Linux / maintainer     := "$author_name$ <$author_email$>",
   Linux / packageSummary := "My App",
-  packageDescription := "My app is ...",
+  packageDescription     := "My app is ...",
   Debian / serverLoading := SystemV.some,
 )
 
 lazy val noPublish: SettingsDefinition = List(
-  publish := {},
-  publishM2 := {},
-  publishLocal := {},
-  publishArtifact := false,
+  publish                   := {},
+  publishM2                 := {},
+  publishLocal              := {},
+  publishArtifact           := false,
   sbt.Keys.`package` / skip := true,
-  packagedArtifacts / skip := true,
-  publish / skip := true,
+  packagedArtifacts / skip  := true,
+  publish / skip            := true,
 )
