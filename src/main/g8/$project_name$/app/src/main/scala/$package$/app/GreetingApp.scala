@@ -7,12 +7,12 @@ import $package$.core.types.{Message, Name}
 
 import scala.io.StdIn
 
-trait GreetingApp[F[_]] {
+trait GreetingApp[F[*]] {
   def run(message: Message): F[Unit]
 }
 
 object GreetingApp {
-  def apply[F[_]: Sync]: GreetingApp[F] = new GreetingApp[F] {
+  def apply[F[*]: Sync]: GreetingApp[F] = new GreetingApp[F] {
     override def run(message: Message): F[Unit] = for {
       _          <- Sync[F].delay(println("Please enter your name: "))
       nameString <- Sync[F].delay(StdIn.readLine())
