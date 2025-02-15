@@ -2,7 +2,7 @@ import scala.collection.JavaConverters._
 import java.lang.management.ManagementFactory
 
 ThisBuild / version := "0.1.0"
-ThisBuild / scalaVersion := "2.12.13"
+ThisBuild / scalaVersion := "2.12.20"
 ThisBuild / organization := "io.kevinlee"
 ThisBuild / organizationName := "Kevin's Code"
 ThisBuild / developers := List(
@@ -38,7 +38,7 @@ lazy val root = (project in file("."))
 
 lazy val props =
   new {
-    val GitHubUsername = "Kevin-Lee"
+    val GitHubUsername = "kevin-lee"
     val ProjectName    = "cats-effect-template"
     val RepoName       = "cats-effect.g8"
   }
